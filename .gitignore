@@ -1,1 +1,6 @@
 hosts
+*.yml
+!add_user.yml
+*.pub
+*.sh
+*.cfg
