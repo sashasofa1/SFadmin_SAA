@@ -1,1 +1,6 @@
 hosts
+*.yml
+!zabbix-t.yml
+*.pub
+*.sh
+*.cfg
