@@ -1,0 +1,32 @@
+---
+- name: Install pgsql12
+  become: yes
+  hosts: fwredhat.com
+  debugger: on_failed
+  tasks:
+
+    - name: Install repo pgsql12 CentOS 7
+      yum:
+        name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+        state: present
+
+    - name: Install pgsql12 package
+      package:
+        name: postgresql12-server
+        state: present
+
+    - name: Stop pgsql12
+      service:
+        name: postgresql-12
+        state: stopped
+        enabled: no
+      ignore_errors: yes
+
+    - name: "Initialize PostgreSQL"
+      shell: "postgresql-12-setup initdb"
+
+    - name: Start pgsql12
+      service:
+        name: postgresql-12
+        state: started
+        enabled: yes

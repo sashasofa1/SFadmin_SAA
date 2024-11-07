@@ -1,0 +1,47 @@
+---
+- name: Install apachephp on port 8080
+  become: yes
+  hosts: fwubuntu2.com
+  debugger: on_failed
+  tasks:
+
+    - name: Install apache ubuntu
+      package:
+        name: apache2
+        state: latest
+
+    - name: Install php ubuntu  
+      package:
+        name: php
+        state: latest 
+
+    - name: Install libapache2-mod-php ubuntu  
+      package:
+        name: libapache2-mod-php
+        state: latest 
+
+    - name: Stop apache
+      service:
+        name: apache2
+        state: stopped
+        enabled: no
+      ignore_errors: yes
+
+    - name: Change def listen port
+      lineinfile:
+        path: /etc/apache2/sites-enabled/000-default.conf
+        regexp: '<VirtualHost'
+        line: "<VirtualHost 127.0.0.1:8080>"
+
+    - name: Change def listen port
+      lineinfile:
+        path: /etc/apache2/ports.conf
+        regexp: 'Listen 80'
+        line: "Listen 8080"
+
+
+    - name: Start apache
+      service:
+        name: apache2
+        state: started
+        enabled: yes

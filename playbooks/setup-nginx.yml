@@ -1,0 +1,23 @@
+---
+- name: Nginx install on server fwubuntu2
+  hosts: fwubuntu2.com fwredhat.com
+  become: yes
+  tasks:
+
+    - name: Install nginx ubuntu
+      when: ansible_distribution == 'Ubuntu'
+      package:
+        name: nginx
+        state: latest
+
+    - name: Install nginx redhat
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+      package:
+        name: nginx
+        state: latest 
+ 
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes

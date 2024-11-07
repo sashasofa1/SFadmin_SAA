@@ -1,0 +1,34 @@
+---
+- name: Install mail
+  become: yes
+  hosts: fwubuntu2.com
+  debugger: on_failed
+  tasks:
+
+    - name: Set Postfix option hostname
+      debconf: 
+        name=postfix 
+        question="postfix/mailname" 
+        value="fwsofienko.com" 
+        vtype="string"
+
+    - name: Set Postfix option type as internet site
+      debconf: 
+        name=postfix 
+        question="postfix/main_mailer_type" 
+        value="'Internet Site'" 
+        vtype="string"
+
+    - name: Install mail
+      apt: 
+        package: ['postfix', 'dovecot-core', 'dovecot-imapd', 'dovecot-pop3d', 'dovecot-lmtpd'] 
+        state: latest 
+
+    - name: start postfix
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes           
+      with_items:
+      - "postfix"
+      - "dovecot"

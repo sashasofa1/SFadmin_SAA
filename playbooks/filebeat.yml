@@ -1,0 +1,39 @@
+---
+- name: Install filebeat agent
+  become: yes
+  hosts: ubuntu
+  debugger: on_failed
+  tasks:
+
+    - name: Copy and exec script
+      script: /etc/ansible/scripts/elastic_repo_ubuntu.sh
+
+    - name: Update cache apt packages
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+        force_apt_get: true
+
+    - name: Install filebeat ubuntu
+      package:
+        name: filebeat
+        state: present
+
+    - name: delete file
+      ignore_errors: yes
+      file:
+        state: absent
+        path: /etc/apt/sources.list.d/elastic-7.x.list
+
+    - name: Stop filebeat
+      service:
+        name: filebeat
+        state: stopped
+        enabled: no
+      ignore_errors: yes
+
+    - name: Start filebeat
+      service:
+        name: filebeat
+        state: started
+        enabled: yes

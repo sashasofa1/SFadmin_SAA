@@ -1,0 +1,20 @@
+---
+- name: bind9 install on server fwubuntu2
+  hosts: fwubuntu2.com
+  become: yes
+  tasks:
+
+    - name: Install bind9
+      package:
+        name: bind9
+        state: latest
+
+    - name: start bind9
+      service:
+        name: bind9
+        state: started
+        
+    - name: enable bind9
+      service:
+        name: named
+        enabled: yes
