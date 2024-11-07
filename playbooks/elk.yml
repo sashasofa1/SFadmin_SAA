@@ -18,7 +18,7 @@
         name: ['elasticsearch-7.17.25-x86_64.rpm', 'kibana-7.17.25-x86_64.rpm']
         state: present
 
-    - name: start postfix
+    - name: start elk
       service:
         name: "{{ item }}"
         state: started
